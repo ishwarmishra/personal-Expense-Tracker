@@ -14,6 +14,13 @@ public abstract class AbstractRepository<T extends AbstractEntity> implements IR
 
     protected List<T> dataList;
     protected int nextId;
+    protected Connection connection;
+
+    public AbstractRepository() {
+        dataList = new ArrayList<>();
+        nextId = 1;
+        connection = getConnection(); // Initialize the connection
+    }
 
     public Connection getConnection() {
         Connection con = null;
@@ -35,10 +42,8 @@ public abstract class AbstractRepository<T extends AbstractEntity> implements IR
 
         return con;
     }
-
-    public AbstractRepository() {
-        dataList = new ArrayList<>();
-        nextId = 1;
+    public void setConnection(Connection connection) {
+        this.connection = connection;
     }
 
     @Override

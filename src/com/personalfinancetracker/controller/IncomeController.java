@@ -62,7 +62,7 @@ public class IncomeController {
         }
     }
 
-    private static void saveData(IncomeRepository incomeRepository) {
+    public static void saveData(IncomeRepository incomeRepository) {
         Scanner sc = new Scanner(System.in);
 
         System.out.println("Enter income source:");
@@ -85,7 +85,7 @@ public class IncomeController {
         System.out.println("Income added successfully.");
     }
     
-    private static BigDecimal readValidAmount(Scanner sc) {
+      private static BigDecimal readValidAmount(Scanner sc) {
         BigDecimal amount = null;
         boolean isValid = false;
 
@@ -94,7 +94,11 @@ public class IncomeController {
 
             try {
                 amount = new BigDecimal(input);
-                isValid = true;
+                if (amount.compareTo(BigDecimal.ZERO) >= 0) {
+                    isValid = true;
+                } else {
+                    System.out.println("Invalid amount. Please enter a positive numeric value:");
+                }
             } catch (NumberFormatException e) {
                 System.out.println("Invalid amount. Please enter a valid numeric value:");
             }
@@ -102,6 +106,7 @@ public class IncomeController {
 
         return amount;
     }
+
     private static LocalDate readValidDate(Scanner sc) {
         LocalDate date = null;
         boolean isValid = false;
@@ -121,8 +126,7 @@ public class IncomeController {
         return date;
     }
 
-
-    private static void deleteData(IncomeRepository incomeRepository) {
+    public static void deleteData(IncomeRepository incomeRepository) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter the ID to delete:");
         int id = sc.nextInt();
@@ -131,7 +135,7 @@ public class IncomeController {
         System.out.println("Income with ID " + id + " deleted successfully.");
     }
 
-    private static void updateData(IncomeRepository incomeRepository) {
+    public static void updateData(IncomeRepository incomeRepository) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter the ID for the update of the income source:");
         int id = sc.nextInt();
@@ -163,7 +167,7 @@ public class IncomeController {
         }
     }
 
-    private static void findByIdData(IncomeRepository incomeRepository) {
+    public static void findByIdData(IncomeRepository incomeRepository) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter the ID to find:");
         int id = sc.nextInt();
@@ -180,7 +184,7 @@ public class IncomeController {
         }
     }
 
-    private static void findAll(IncomeRepository incomeRepository) {
+    public static void findAll(IncomeRepository incomeRepository) {
     System.out.println("All Income Data:");
     List<IncomeEntity> incomeEntities = incomeRepository.findAll();
     for (IncomeEntity incomeEntity : incomeEntities) {
@@ -191,5 +195,4 @@ public class IncomeController {
         System.out.println();
     }
 }
-
-    }
+}
