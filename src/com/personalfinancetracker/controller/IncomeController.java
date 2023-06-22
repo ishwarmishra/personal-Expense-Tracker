@@ -6,6 +6,7 @@ import com.personalfinancetracker.repository.IncomeRepository;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -68,12 +69,13 @@ public class IncomeController {
         String incomeSource = sc.nextLine();
 
         System.out.println("Enter amount:");
-        BigDecimal amount = sc.nextBigDecimal();
+        BigDecimal amount = readValidAmount(sc);
 
         System.out.println("Enter date in this format (dd/mm/yyyy):");
         String date = sc.next();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate localDate = LocalDate.parse(date, formatter);
+        LocalDate localDate = readValidDate(sc);
+
 
         int id = 1; 
 
@@ -82,6 +84,43 @@ public class IncomeController {
 
         System.out.println("Income added successfully.");
     }
+    
+    private static BigDecimal readValidAmount(Scanner sc) {
+        BigDecimal amount = null;
+        boolean isValid = false;
+
+        while (!isValid) {
+            String input = sc.nextLine();
+
+            try {
+                amount = new BigDecimal(input);
+                isValid = true;
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid amount. Please enter a valid numeric value:");
+            }
+        }
+
+        return amount;
+    }
+    private static LocalDate readValidDate(Scanner sc) {
+        LocalDate date = null;
+        boolean isValid = false;
+
+        while (!isValid) {
+            String input = sc.nextLine();
+
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                date = LocalDate.parse(input, formatter);
+                isValid = true;
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date. Please enter a valid date in the format (dd/MM/yyyy):");
+            }
+        }
+
+        return date;
+    }
+
 
     private static void deleteData(IncomeRepository incomeRepository) {
         Scanner sc = new Scanner(System.in);
