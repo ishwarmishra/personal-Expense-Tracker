@@ -1,16 +1,17 @@
 package com.personalfinancetracker.controller;
 
 import com.personalfinancetracker.model.ExpenseEntity;
-import com.personalfinancetracker.repository.IRepository;
+import com.personalfinancetracker.repository.ExpenseRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Scanner;
 
 public class ExpenseController {
 
-    public static void dashboard(IRepository<ExpenseEntity> expenseRepository) {
+    public static void dashboard(ExpenseRepository expenseRepository) {
         System.out.println("Welcome to the Expense Tracker!");
         System.out.println("Please select an option:");
         System.out.println("1. Add Expense");
@@ -19,7 +20,7 @@ public class ExpenseController {
         System.out.println("4. Find by ID");
         System.out.println("5. Find all Data");
         System.out.println("6. Exit");
-        System.out.println("Please enter the choice:");
+        System.out.println("Please Enter the Choice:");
 
         Scanner sc = new Scanner(System.in);
         int choice = sc.nextInt();
@@ -30,7 +31,6 @@ public class ExpenseController {
                 saveData(expenseRepository);
                 dashboard(expenseRepository);
                 break;
-            
             case 2:
                 System.out.println("Delete Expense");
                 deleteData(expenseRepository);
@@ -61,63 +61,62 @@ public class ExpenseController {
         }
     }
 
-    private static void saveData(IRepository<ExpenseEntity> expenseRepository) {
+    private static void saveData(ExpenseRepository expenseRepository) {
         Scanner sc = new Scanner(System.in);
-        
-        System.out.println("Enter expense name:");
-        String expenseName = sc.nextLine();
-        
-        System.out.println("Enter Expense amount:");
+
+        System.out.println("Enter expense source:");
+        String expenseSource = sc.nextLine();
+
+        System.out.println("Enter amount:");
         BigDecimal amount = sc.nextBigDecimal();
-        
+
         System.out.println("Enter date in this format (dd/mm/yyyy):");
         String date = sc.next();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate localDate = LocalDate.parse(date, formatter);
 
-        ExpenseEntity expenseEntity = new ExpenseEntity(expenseName, amount, localDate);
+        int id = 1; 
+
+        ExpenseEntity expenseEntity = new ExpenseEntity(id, expenseSource, amount, localDate);
         expenseRepository.add(expenseEntity);
 
         System.out.println("Expense added successfully.");
     }
 
-    
-    private static void deleteData(IRepository<ExpenseEntity> expenseRepository) {
+    private static void deleteData(ExpenseRepository expenseRepository) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter the ID to delete:");
         int id = sc.nextInt();
 
-        ExpenseEntity expenseEntity = expenseRepository.findById(id);
-        if (expenseEntity != null) {
-            expenseRepository.delete(id);
-            System.out.println("Expense with ID " + id + " deleted successfully.");
-        } else {
-            System.out.println("Expense with ID " + id + " not found.");
-        }
+        expenseRepository.delete(id);
+        System.out.println("Expense with ID " + id + " deleted successfully.");
     }
 
-    private static void updateData(IRepository<ExpenseEntity> expenseRepository) {
+    private static void updateData(ExpenseRepository expenseRepository) {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Enter the ID for the update of the expense name:");
+        System.out.println("Enter the ID for the update of the expense source:");
         int id = sc.nextInt();
 
         ExpenseEntity expenseEntity = expenseRepository.findById(id);
+
         if (expenseEntity != null) {
-            sc.nextLine(); 
-            System.out.println("Enter expense name:");
-            String expenseName = sc.nextLine();
-            
-            System.out.println("Enter amount:");
+            sc.nextLine();
+            System.out.println("Enter expense source:");
+            String expenseSource = sc.nextLine();
+
+            System.out.println("Enter amount of Expense:");
             BigDecimal amount = sc.nextBigDecimal();
-            
+
             System.out.println("Enter date in this format (dd/mm/yyyy):");
             String date = sc.next();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDate localDate = LocalDate.parse(date, formatter);
 
-            expenseEntity.setExpense(expenseName);
+            expenseEntity.setExpense(expenseSource);
             expenseEntity.setAmount(amount);
             expenseEntity.setDate(localDate);
+
+            expenseRepository.update(expenseEntity);
 
             System.out.println("Expense with ID " + id + " updated successfully.");
         } else {
@@ -125,7 +124,7 @@ public class ExpenseController {
         }
     }
 
-    private static void findByIdData(IRepository<ExpenseEntity> expenseRepository) {
+    private static void findByIdData(ExpenseRepository expenseRepository) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter the ID to find:");
         int id = sc.nextInt();
@@ -134,7 +133,7 @@ public class ExpenseController {
         if (expenseEntity != null) {
             System.out.println("Expense Details:");
             System.out.println("ID: " + expenseEntity.getId());
-            System.out.println("Name: " + expenseEntity.getExpense());
+            System.out.println("Source: " + expenseEntity.getExpense());
             System.out.println("Amount: " + expenseEntity.getAmount());
             System.out.println("Date: " + expenseEntity.getDate());
         } else {
@@ -142,14 +141,15 @@ public class ExpenseController {
         }
     }
 
-    private static void findAll(IRepository<ExpenseEntity> expenseRepository) {
+    private static void findAll(ExpenseRepository expenseRepository) {
         System.out.println("All Expense Data:");
-        expenseRepository.findAll().forEach(expenseEntity -> {
+        List<ExpenseEntity> expenseEntities = expenseRepository.findAll();
+        for (ExpenseEntity expenseEntity : expenseEntities) {
             System.out.println("ID: " + expenseEntity.getId());
-            System.out.println("Name: " + expenseEntity.getExpense());
+            System.out.println("Source: " + expenseEntity.getExpense());
             System.out.println("Amount: " + expenseEntity.getAmount());
             System.out.println("Date: " + expenseEntity.getDate());
             System.out.println();
-        });
+        }
     }
 }

@@ -75,7 +75,7 @@ public class IncomeController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate localDate = LocalDate.parse(date, formatter);
 
-        int id = 1; // You may need to generate a unique ID here based on your requirements
+        int id = 1; 
 
         IncomeEntity incomeEntity = new IncomeEntity(id, incomeSource, amount, localDate);
         incomeRepository.add(incomeEntity);

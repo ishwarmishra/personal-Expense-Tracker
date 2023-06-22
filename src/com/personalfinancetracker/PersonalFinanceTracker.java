@@ -46,7 +46,7 @@ public class PersonalFinanceTracker {
                     break;
                 case 2:
                     ExpenseController expenseController = new ExpenseController();
-                    expenseController.dashboard(expenseRepository);
+                    expenseController.dashboard((ExpenseRepository)expenseRepository);
                     break;
                 case 3:
                     System.out.println("Exiting Personal Finance Tracker...");

@@ -4,16 +4,20 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class ExpenseEntity extends AbstractEntity {
+    private int id;
     private String expense;
     private BigDecimal amount;
     private LocalDate date;
 
-    public ExpenseEntity(String expense, BigDecimal amount, LocalDate date) {
+    public ExpenseEntity(int id1, String expense, BigDecimal amount, LocalDate date) {
         this.expense = expense;
         this.amount = amount;
         this.date = date;
     }
     
+     public int getId() {
+        return id;
+    }
 
     public String getExpense() {
         return expense;
