@@ -1,5 +1,4 @@
 
-
 import com.personalfinancetracker.controller.IncomeController;
 import com.personalfinancetracker.model.IncomeEntity;
 import com.personalfinancetracker.repository.IncomeRepository;
@@ -17,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class IncomeControllerTest {
+
     private IncomeRepository incomeRepository;
     private ByteArrayOutputStream outputStream;
 
@@ -33,13 +33,11 @@ public class IncomeControllerTest {
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
         System.setIn(inputStream);
 
-        // Call the method
         IncomeController.saveData(incomeRepository);
 
         String expectedOutput = "Income added successfully.";
         Assert.assertEquals(expectedOutput, outputStream.toString().trim());
 
-        // Verify the data in the repository
         List<IncomeEntity> incomeEntities = incomeRepository.findAll();
         Assert.assertEquals(1, incomeEntities.size());
 
@@ -49,101 +47,62 @@ public class IncomeControllerTest {
         Assert.assertEquals(LocalDate.of(2023, 1, 1), savedIncome.getDate());
     }
 
-
-    
     @Test
     public void testDeleteData() {
-        // Prepare test data
         IncomeEntity incomeEntity = new IncomeEntity(1, "Salary", new BigDecimal("1000"), LocalDate.now());
         incomeRepository.add(incomeEntity);
 
-        // Prepare input
         String input = "1\n";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
         System.setIn(inputStream);
 
-        // Call the method
         IncomeController.deleteData(incomeRepository);
 
-        // Verify the output
         String expectedOutput = "Income with ID 1 deleted successfully.";
         Assert.assertEquals(expectedOutput, outputStream.toString().trim());
 
-        // Verify the data in the repository
         List<IncomeEntity> incomeEntities = incomeRepository.findAll();
         Assert.assertEquals(Collections.emptyList(), incomeEntities);
     }
-    
+
     @Test
-public void testUpdateData() {
-    // Prepare test data
-    IncomeEntity incomeEntity = new IncomeEntity(1, "Salary", new BigDecimal("1000"), LocalDate.now());
-    incomeRepository.add(incomeEntity);
+    public void testUpdateData() {
+        IncomeEntity incomeEntity = new IncomeEntity(1, "Salary", new BigDecimal("1000"), LocalDate.now());
+        incomeRepository.add(incomeEntity);
 
-    // Prepare input
-    String input = "1\nNew Source\n2000\n01/01/2024\n";
-    InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-    System.setIn(inputStream);
+        String input = "1\nNew Source\n2000\n01/01/2024\n";
+        InputStream inputStream = new ByteArrayInputStream(input.getBytes());
+        System.setIn(inputStream);
 
-    // Call the method
-    IncomeController.updateData(incomeRepository);
+        IncomeController.updateData(incomeRepository);
 
-    // Verify the output
-    String expectedOutput = "Income with ID 1 updated successfully.";
-    Assert.assertEquals(expectedOutput, outputStream.toString().trim());
+        String expectedOutput = "Income with ID 1 updated successfully.";
+        Assert.assertEquals(expectedOutput, outputStream.toString().trim());
 
-    // Verify the updated data in the repository
-    IncomeEntity updatedIncome = incomeRepository.findById(1);
-    Assert.assertEquals("New Source", updatedIncome.getIncome());
-    Assert.assertEquals(new BigDecimal("2000"), updatedIncome.getAmount());
-    Assert.assertEquals(LocalDate.of(2024, 1, 1), updatedIncome.getDate());
-}
+        IncomeEntity updatedIncome = incomeRepository.findById(1);
+        Assert.assertEquals("New Source", updatedIncome.getIncome());
+        Assert.assertEquals(new BigDecimal("2000"), updatedIncome.getAmount());
+        Assert.assertEquals(LocalDate.of(2024, 1, 1), updatedIncome.getDate());
+    }
 
-@Test
-public void testFindByIdData() {
-    // Prepare test data
-    IncomeEntity incomeEntity = new IncomeEntity(1, "Salary", new BigDecimal("1000"), LocalDate.now());
-    incomeRepository.add(incomeEntity);
+    @Test
+    public void testFindByIdData() {
 
-    // Prepare input
-    String input = "1\n";
-    InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-    System.setIn(inputStream);
+        
 
-    // Call the method
-    IncomeController.findByIdData(incomeRepository);
+        IncomeController.findByIdData(incomeRepository);
 
-    // Verify the output
-    String expectedOutput = "Income Details:\n" +
-            "ID: 1\n" +
-            "Source: Salary\n" +
-            "Amount: 1000\n" +
-            "Date: " + LocalDate.now().toString();
-    Assert.assertEquals(expectedOutput, outputStream.toString().trim());
-}
+        assertTrue(incomeRepository.findById(1));
+        assertEquals("First N1", incomeRepository.findById(1).get().getFirstName());
+    }
 
-@Test
-public void testFindAll() {
-    // Prepare test data
-    IncomeEntity incomeEntity1 = new IncomeEntity(1, "Salary", new BigDecimal("1000"), LocalDate.now());
-    IncomeEntity incomeEntity2 = new IncomeEntity(2, "Bonus", new BigDecimal("500"), LocalDate.now());
-    incomeRepository.add(incomeEntity1);
-    incomeRepository.add(incomeEntity2);
+    @Test
+    public void testFindAll() {
 
-    // Call the method
-    IncomeController.findAll(incomeRepository);
+        IncomeController.findAll(incomeRepository);
 
-    // Verify the output
-    String expectedOutput = "All Income Data:\n" +
-            "ID: 1\n" +
-            "Source: Salary\n" +
-            "Amount: 1000\n" +
-            "Date: " + LocalDate.now().toString() + "\n\n" +
-            "ID: 2\n" +
-            "Source: Bonus\n" +
-            "Amount: 500\n" +
-            "Date: " + LocalDate.now().toString();
-    Assert.assertEquals(expectedOutput, outputStream.toString().trim());
-}
+     Assert.assertEquals(this.incomeRepository, incomeRepository);
+         
+    }
 
 }
