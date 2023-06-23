@@ -2,6 +2,7 @@ package com.personalfinancetracker.repository;
 
 import com.personalfinancetracker.DataRepository;
 import com.personalfinancetracker.model.AbstractEntity;
+import com.personalfinancetracker.model.IncomeEntity;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;

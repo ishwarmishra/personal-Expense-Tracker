@@ -11,7 +11,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class IncomeRepository<T> extends AbstractRepository<IncomeEntity> {
 
     public IncomeRepository() {
@@ -20,13 +19,21 @@ public class IncomeRepository<T> extends AbstractRepository<IncomeEntity> {
 
     @Override
     public IncomeEntity add(IncomeEntity incomeEntity) {
-        String query = "INSERT INTO income (name, amount, incomedate) VALUES (?, ?, ?)";
-        try (PreparedStatement preparedStatement = getConnection().prepareStatement(query)) {
-            preparedStatement.setString(1, incomeEntity.getIncome());
-            preparedStatement.setBigDecimal(2, incomeEntity.getAmount());
-            preparedStatement.setDate(3, Date.valueOf(incomeEntity.getDate()));
+        String query = "INSERT INTO income (id,name, amount, incomedate) VALUES (?, ?, ?,?)";
+        try (PreparedStatement preparedStatement = getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setInt(1, incomeEntity.getId());
+
+            preparedStatement.setString(2, incomeEntity.getIncome());
+            preparedStatement.setBigDecimal(3, incomeEntity.getAmount());
+            preparedStatement.setDate(4, Date.valueOf(incomeEntity.getDate()));
             preparedStatement.executeUpdate();
 
+            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                int id = generatedKeys.getInt(1);
+                incomeEntity.setId(id);
+                return incomeEntity;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -53,6 +60,7 @@ public class IncomeRepository<T> extends AbstractRepository<IncomeEntity> {
             preparedStatement.setDate(3, Date.valueOf(incomeEntity.getDate()));
             preparedStatement.setInt(4, incomeEntity.getId());
             preparedStatement.executeUpdate();
+            return incomeEntity;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -66,6 +74,7 @@ public class IncomeRepository<T> extends AbstractRepository<IncomeEntity> {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
+                
                 String name = resultSet.getString("name");
                 BigDecimal amount = resultSet.getBigDecimal("amount");
                 Date date = resultSet.getDate("incomedate");

@@ -1,6 +1,7 @@
 package com.personalfinancetracker.repository;
 
 import com.personalfinancetracker.model.ExpenseEntity;
+
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -10,22 +11,29 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExpenseRepository extends AbstractRepository<ExpenseEntity> {
+public class ExpenseRepository<T> extends AbstractRepository<ExpenseEntity> {
 
     public ExpenseRepository() {
         super();
     }
-    
-    
-     @Override
+
+    @Override
     public ExpenseEntity add(ExpenseEntity expenseEntity) {
-        String query = "INSERT INTO expense (name, amount, expensedate) VALUES (?, ?, ?)";
-        try (PreparedStatement preparedStatement = getConnection().prepareStatement(query)) {
+        String query = "INSERT INTO expense (id,name, amount, expensedate) VALUES (?,?, ?, ?)";
+        try (PreparedStatement preparedStatement = getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setInt(1, expenseEntity.getId());
+
             preparedStatement.setString(1, expenseEntity.getExpense());
             preparedStatement.setBigDecimal(2, expenseEntity.getAmount());
             preparedStatement.setDate(3, Date.valueOf(expenseEntity.getDate()));
             preparedStatement.executeUpdate();
 
+            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                int id = generatedKeys.getInt(1);
+                expenseEntity.setId(id);
+                return expenseEntity;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -52,6 +60,7 @@ public class ExpenseRepository extends AbstractRepository<ExpenseEntity> {
             preparedStatement.setDate(3, Date.valueOf(expenseEntity.getDate()));
             preparedStatement.setInt(4, expenseEntity.getId());
             preparedStatement.executeUpdate();
+            return expenseEntity;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -94,7 +103,4 @@ public class ExpenseRepository extends AbstractRepository<ExpenseEntity> {
         }
         return expenseEntities;
     }
-
-    
-
 }

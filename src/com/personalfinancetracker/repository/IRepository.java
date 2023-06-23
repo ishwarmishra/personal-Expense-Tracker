@@ -1,5 +1,6 @@
 package com.personalfinancetracker.repository;
 
+import com.personalfinancetracker.model.IncomeEntity;
 import java.util.List;
 
 public interface IRepository<T> {

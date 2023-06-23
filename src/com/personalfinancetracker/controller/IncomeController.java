@@ -72,20 +72,17 @@ public class IncomeController {
         BigDecimal amount = readValidAmount(sc);
 
         System.out.println("Enter date in this format (dd/mm/yyyy):");
-        String date = sc.next();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate localDate = readValidDate(sc);
 
-
-        int id = 1; 
+        int id = 1;
 
         IncomeEntity incomeEntity = new IncomeEntity(id, incomeSource, amount, localDate);
         incomeRepository.add(incomeEntity);
 
         System.out.println("Income added successfully.");
     }
-    
-      private static BigDecimal readValidAmount(Scanner sc) {
+
+    private static BigDecimal readValidAmount(Scanner sc) {
         BigDecimal amount = null;
         boolean isValid = false;
 
@@ -185,14 +182,14 @@ public class IncomeController {
     }
 
     public static void findAll(IncomeRepository incomeRepository) {
-    System.out.println("All Income Data:");
-    List<IncomeEntity> incomeEntities = incomeRepository.findAll();
-    for (IncomeEntity incomeEntity : incomeEntities) {
-        System.out.println("ID: " + incomeEntity.getId());
-        System.out.println("Source: " + incomeEntity.getIncome());
-        System.out.println("Amount: " + incomeEntity.getAmount());
-        System.out.println("Date: " + incomeEntity.getDate());
-        System.out.println();
+        System.out.println("All Income Data:");
+        List<IncomeEntity> incomeEntities = incomeRepository.findAll();
+        for (IncomeEntity incomeEntity : incomeEntities) {
+            System.out.println("ID: " + incomeEntity.getId());
+            System.out.println("Source: " + incomeEntity.getIncome());
+            System.out.println("Amount: " + incomeEntity.getAmount());
+            System.out.println("Date: " + incomeEntity.getDate());
+            System.out.println();
+        }
     }
-}
 }
