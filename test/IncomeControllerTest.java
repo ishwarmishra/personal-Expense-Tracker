@@ -23,9 +23,17 @@ public class IncomeControllerTest {
         IncomeEntity incomeEntity1 = new IncomeEntity(100, "Salary", new BigDecimal("1000"), LocalDate.now());
 
         incomeRepository.add(incomeEntity1);
+        IncomeEntity addEntity= incomeRepository.findById(100);
+              
+        Assert.assertEquals(incomeEntity1.getId(),addEntity.getId());
+        Assert.assertEquals(incomeEntity1.getIncome(), addEntity.getIncome());
+        Assert.assertEquals(incomeEntity1.getAmount(),addEntity.getAmount());
+        Assert.assertEquals(incomeEntity1.getDate(), addEntity.getDate());
+
         
-        Assert.assertNotNull(incomeEntity1);
-        //Assert.assertNull(incomeEntity1);
+       //Assert.assertNull(incomeEntity1);
+        
+        
         
 
     }
@@ -36,42 +44,43 @@ public class IncomeControllerTest {
        incomeRepository.delete(99);
        
        IncomeEntity deletedEntity= incomeRepository.findById(99);
-      Assert.assertNull(deletedEntity);
-       //Assert.assertNotNull(deletedEntity);
+       
+       Assert.assertNull(deletedEntity);
        
     }
     
     @Test
     public void updateData(){
-        IncomeEntity updateEntity=new IncomeEntity(22, "Rent", new BigDecimal("30000"), LocalDate.now());
-        incomeRepository.add(updateEntity);
+        IncomeEntity upEntity=new IncomeEntity(22, "Rent", new BigDecimal("30000"), LocalDate.now());
+        incomeRepository.add(upEntity);
         
-        IncomeEntity updatedEntity =incomeRepository.update(updateEntity);
+        IncomeEntity retrieveEntity = incomeRepository.findById(22);
+
+        IncomeEntity updatedEntity =incomeRepository.update(upEntity);
         
-        Assert.assertEquals(updateEntity.getId(), updatedEntity.getId());
-        Assert.assertEquals(updateEntity.getIncome(),updatedEntity.getIncome());
-        Assert.assertEquals(updateEntity.getAmount(), updatedEntity.getAmount());
-        Assert.assertEquals(updateEntity.getDate(), updatedEntity.getDate());
+        Assert.assertEquals(retrieveEntity.getId(), updatedEntity.getId());
+        Assert.assertEquals(retrieveEntity.getIncome(),updatedEntity.getIncome());
+        Assert.assertEquals(retrieveEntity.getAmount(), updatedEntity.getAmount());
+        Assert.assertEquals(retrieveEntity.getDate(), updatedEntity.getDate());
+        
+        Assert.assertNotNull(updatedEntity);
         
         
-//        Assert.assertNotEquals(updateEntity.getId(),updatedEntity.getId());
-//        Assert.assertNotEquals(updateEntity.getIncome(),updatedEntity.getAmount());
-//        Assert.assertNotEquals(updateEntity.getAmount(),updatedEntity.getAmount());
-//        Assert.assertNotEquals(updateEntity.getDate(),updatedEntity.getDate());
     } 
 
     @Test
     public void findById() {
-        IncomeEntity incomeEntity1 = new IncomeEntity(1000, "Salary", new BigDecimal("1000"), LocalDate.now());
+        IncomeEntity incomeEntity1 = new IncomeEntity(100, "Salary", new BigDecimal("1000"), LocalDate.now());
         incomeRepository.add(incomeEntity1);
 
         IncomeEntity retrieveEntity = incomeRepository.findById(100);
 
-      Assert.assertNotNull(retrieveEntity);
-//        Assert.assertNotEquals(incomeEntity1.getId(), retrieveEntity.getId());
-//        Assert.assertNotEquals(incomeEntity1.getIncome(), retrieveEntity.getIncome());
-//        Assert.assertNotEquals(incomeEntity1.getAmount(),retrieveEntity.getAmount());
-//        Assert.assertNotEquals(incomeEntity1.getDate(),retrieveEntity.getDate());
+
+      
+        Assert.assertEquals(incomeEntity1.getId(), retrieveEntity.getId());
+        Assert.assertEquals(incomeEntity1.getIncome(), retrieveEntity.getIncome());
+        Assert.assertEquals(incomeEntity1.getAmount(),retrieveEntity.getAmount());
+        Assert.assertEquals(incomeEntity1.getDate(),retrieveEntity.getDate());
 
     }
     
